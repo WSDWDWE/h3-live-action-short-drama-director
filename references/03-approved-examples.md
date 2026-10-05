@@ -1,6 +1,15 @@
 # 用户认可的完整行样例
 
-这些来自《丈母娘拦女婿送冻饺子》的实际交付。学习字段、绑定、动作/声音细节与镜头起落，不迁移人物、台词、商品、28组或7分钟总长。样例时间点只服务该段内容，新剧本逐镜重算。每个样例均为15秒。
+前三个样例来自《丈母娘拦女婿送冻饺子》的实际交付，正文保留。学习字段、绑定，以及“人物为什么行动 → 行动改变什么 → 镜头怎样呈现”的因果，不模仿动作数量或每镜的动作种类。拿走饺子阻止离开、放下银行卡提出实际帮助、从对面坐到身旁改变关系；这些依据成立，动作才成立。不能因为新台词出现身体部位或物件名称，就照着安排触摸、指认或拿放。
+
+末尾新增一个信息揭示驱动的教学样例，与前三个用户认可成品明确区分。不迁移任何样例的人物、台词、商品、28组或7分钟总长。时间点只服务该段内容，新剧本逐镜重算。每个样例均为15秒。
+
+## 目录
+
+- [用户认可样例：原第1组](#样例原第1组)
+- [用户认可样例：原第11组](#样例原第11组)
+- [用户认可样例：原第13组](#样例原第13组)
+- [新增教学样例：信息揭示驱动镜头](#新增教学样例信息揭示驱动镜头)
 
 ## 样例：原第1组
 
@@ -93,3 +102,47 @@ detailed_description: Photorealistic contemporary Chinese family drama, natural 
 [Shot 3] At 00:09.100, Hold a seated two-shot at eye level. <Subject 1> turns toward <Subject 2> and answers without lecturing down at her; the daughter meets her eyes and begins to straighten with a decision. Keep their closeness visible and end on that readiness to act. <Subject 1> (S1), in a slightly husky, direct older female Mandarin voice, says <d>[Chinese] 一家人过日子，不怕吃点亏，就怕人人都只算自己的账。</d>. Delivery: gentle and plainspoken, stressing being one family and counting only one's own costs. Sound: Soft room tone and a quiet sleeve movement replace the earlier tense pulse.
 overall_soundscape: Quiet home room tone with only the specified footsteps, fabric and prop sounds; each line belongs to its named speaker and other visible characters listen with closed lips.
 non_diegetic_music: Warm, restrained piano, easing gradually as the relationship softens.```
+
+## 新增教学样例：信息揭示驱动镜头
+
+**新增教学样例，非既有用户验收成片。** 本例用于演示先确定信息归属和人物目标，再选择表演方式；不把减少肢体动作当成新的全片风格。
+
+教学原稿事实：林清向赵姨询问失散哥哥的辨认依据。哥哥不在现场，右手腕旧疤属于哥哥；救妹妹的往事及父亲日记是本段原稿明确给出的信息。日记尚未拿到现场。本段原稿没有触摸手腕、出示日记或起身离开的动作。林清想知道为何被隐瞒，赵姨先解释隐瞒原因，再提供可核实的记录出处。
+
+原对白依次为：
+
+- 赵姨：“你哥哥右手腕有一道旧疤，是小时候救你留下的。”
+- 林清：“您以前怎么从来没跟我说过？”
+- 赵姨：“我怕你自责。你父亲当年的日记里，把那天的事记得清清楚楚。”
+
+规划：ordinary，57个对白汉字；三镜分别为0—4.8秒、4.8—8.2秒、8.2—15秒。信息变化为“辨认特征连到林清本人 → 林清质问隐瞒 → 赵姨解释并给出记录出处”。按对白和换气规划时间，尚未实测配音。三镜都有正在发生的交流，不靠沉默延长。
+
+参考图依次（教学示意，未随 Skill 提供这些 PNG）：
+
+- `assets\林清_米色针织衫.png`
+- `assets\赵姨_深蓝衬衫.png`
+- `assets\旧居客厅.png`
+
+林清是本故事主角，图槽优先于赵姨；全片声线分别为 S2、S5，与本组 Subject 1、Subject 2 独立。继承上一镜尾帧：否。
+
+完整提示词：
+
+```text
+subject_definitions:
+<Subject 1> is Lin Qing, a young adult Chinese woman with shoulder-length black hair and a cream knit sweater, from <Picture 1>.
+<Subject 2> is Aunt Zhao, an older Chinese woman with short gray-black hair and a dark-blue blouse, from <Picture 2>.
+<Subject 3> is the established modest living room with two chairs beside a window and soft afternoon daylight; use its layout and light, with the two people supplied separately, from <Picture 3>.
+summary: [reference generation] A 15-second, vertical 9:16 photorealistic live-action Chinese family-drama sequence. An identifying detail reveals a personal sacrifice; Lin Qing challenges the concealment, and Aunt Zhao names a written source for the account.
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - retain identity, hair and clothing; her expression follows the disclosure.
+<Subject 2> (appears in [Shot 1], [Shot 3]): fully_preserved - retain identity, hair and clothing; her delivery shifts from careful disclosure to a direct answer.
+<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - retain chair positions, window direction and afternoon daylight.
+detailed_description: Natural skin texture, plausible motion and consistent eyelines. Current state: <Subject 1> sits frame left facing <Subject 2> on the right, both already in conversation in <Subject 3>. Lin Qing's absent older brother is the person whose identifying scar is being discussed. Her father's diary is an existing record to be consulted after this conversation. Voice roster: Lin Qing is S2; Aunt Zhao is S5.
+[Shot 1] Begin with a steady seated waist-up two-shot, <Subject 1> left and <Subject 2> right. <Subject 2> addresses Lin Qing directly; the explanation becomes personal on the final clause. <Subject 1>'s attentive expression tightens as she realizes she was involved, and she meets Zhao's eyes. Keep both faces readable. <Subject 2> (S5), in a low, slightly husky older female Mandarin voice, says <d>[Chinese] 你哥哥右手腕有一道旧疤，是小时候救你留下的。</d>. Delivery: measured at first, then more deliberate and emotionally exposed on the final clause. Cut when that revelation turns Lin Qing's listening into a question.
+[Shot 2] At 00:04.800, Cut to a clean medium close-up of <Subject 1>, maintaining her look toward frame right. She challenges Zhao immediately, her voice rising on the question before hurt catches up with her anger. Hold the camera steady through the shift; she maintains eye contact with Zhao at the end of the question. <Subject 1> (S2), in a clear young adult female Mandarin voice, says <d>[Chinese] 您以前怎么从来没跟我说过？</d>. Delivery: a quick attack on the withheld truth, stressing that Zhao had never told her, with a briefly uneven breath at the end. Her finishing breath bridges the cut to Zhao's answer.
+[Shot 3] At 00:08.200, Cut to a clean medium close-up of <Subject 2>, looking toward frame left. She accepts the accusation before answering. As her reply moves from her own fear to the available written account, make one short, slow push toward her face and stop in a close-up. <Subject 2> (S5), in the same older female Mandarin voice, says <d>[Chinese] 我怕你自责。你父亲当年的日记里，把那天的事记得清清楚楚。</d>. Delivery: exposed and quieter in the first sentence, then firm and precise about the source, with a short natural breath between sentences. Let the final words complete the movement within the 15-second group; her sustained eyeline offers Lin Qing a way to verify the account.
+overall_soundscape: Soft living-room tone under continuous turn-taking; each line belongs to its named speaker. Lin Qing's uneven finishing breath connects her question to Zhao's answer. The listener's lips stay closed during the other person's speech.
+non_diegetic_music: A faint sustained piano tone beneath the first disclosure, fading under Lin Qing's question so the answer remains exposed.
+```
+
+本例的镜头任务由“消息如何改变眼前两人的交流”决定，而不是给旧疤安排触摸动作、给日记安排临时翻找。需要强动作的原稿仍应完整保留强动作；本例不能反向用作删掉争抢、拦阻、拥抱或证据交接的理由。
