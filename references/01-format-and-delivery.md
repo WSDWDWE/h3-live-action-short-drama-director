@@ -53,21 +53,17 @@ overall_soundscape:
 non_diegetic_music:
 ```
 
-`summary` 用一句短句标明 `[reference generation]`、15-second、vertical 9:16、真人类型和本组事件，不复述整段剧情或解释导演意图。
+`summary` 标明 `[reference generation]`、15-second、vertical 9:16、真人类型和本组戏剧任务。
 
-`retention_analysis` 每个主体用一行列 `<Subject n>`、出现的 `[Shot n]` 与 `fully_preserved` 的具体范围，如 identity and outfit / room layout。表演变化只在对应镜头写一次，不在这里重复；不要求冻结参考图表情和站姿。
+`retention_analysis` 逐个列 `<Subject n>`、出现的 `[Shot n]` 与 `fully_preserved` 的具体范围；保留身份/造型或场景布局，不要求把参考图表情和站姿冻结不动。
 
-`detailed_description` 的 `Current state:` 只交代独立生成所需的场景、站坐位置和关键持物/座位状态，不讲前情或重复对白中的往事。每镜用简短英文写景别、说话对象、主要表情语气，必要动作、运镜和声源再按需补充。第一镜只写 `[Shot 1]`；后续严格如 `[Shot 2] At 00:04.200, ...`。最后一镜持续到15秒，不能写到15秒才开始最后一镜。
-
-同一组内稳定信息只在相应位置写一次：身份造型在 subject_definitions，开镜站位在 Current state，声线特征在每位说话人首次发言处；后续用 Subject/S 标签承接，变化才另写。每组仍须独立可用，不依赖上一组隐含记忆。overall_soundscape 与 non_diegetic_music 各用必要的简短说明，不重复逐镜剧情。
+`detailed_description` 先给必要的 `Current state:`，再逐镜写英文画面、表演和声音。第一镜只写 `[Shot 1]`；后续严格如 `[Shot 2] At 00:04.200, ...`。最后一镜持续到15秒，不能写到15秒才开始最后一镜。
 
 可见人物对白示例：
 
 ```text
-<Subject 2> faces <Subject 1>, looking angry. <Subject 2> (S3), in a clear young adult female Mandarin voice, says sharply <d>[Chinese] 原台词。</d>.
+<Subject 2> (S3), in a clear young adult female Mandarin voice, says <d>[Chinese] 原台词。</d>. Delivery: [具体语气、重音、呼吸、受何触发]. Sound: [动作声或怎样接下一镜].
 ```
-
-这是一种简写方式，不固定使用 angry/sharply。表情与语气按场面选择；Delivery、Sound 不是每镜必填小标题。关键重音、抢话、电话音质或动作声确实影响剧情时才补写，不逐句列出呼吸、音量、肌肉变化和声音切点。
 
 跨镜同一句：
 
