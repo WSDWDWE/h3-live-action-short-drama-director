@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mechanical checks for an H3 nine-column XLSX; standard library only.
+"""Mechanical checks for an H3 thirteen-column XLSX; standard library only.
 
 Usage: validate_storyboard.py --xlsx storyboard.xlsx
        [--dialogue-json original_dialogue.json] [--plan-json group_plan.json]
@@ -21,8 +21,10 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 
-HEADERS = ["剧本名", "分镜序号", *[f"参考图{i}" for i in range(1, 6)],
-           "继承上一镜尾帧", "提示词"]
+MAX_REFERENCES = 9
+REFERENCE_HEADERS = [f"参考图{i}" for i in range(1, MAX_REFERENCES + 1)]
+HEADERS = ["剧本名", "分镜序号", *REFERENCE_HEADERS, "继承上一镜尾帧", "提示词"]
+COLUMN_INDEX = {name: index for index, name in enumerate(HEADERS)}
 FIELDS = ["subject_definitions", "summary", "retention_analysis",
           "detailed_description", "overall_soundscape", "non_diegetic_music"]
 NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
@@ -187,7 +189,7 @@ def check_prompt(prompt, refs, context, errors):
         pictures = [int(value) for value in re.findall(r"\bfrom\s+<Picture\s+(\d+)>", body)]
         if pictures != [number]:
             fail(f"<Subject {number}>必须对应且仅对应from <Picture {number}>")
-        if number < 1 or number > 5 or not refs[number - 1]:
+        if not 1 <= number <= MAX_REFERENCES or not refs[number - 1]:
             fail(f"<Subject {number}>没有对应的非空参考图槽位")
     for number, path in enumerate(refs, 1):
         if path and number not in defined:
@@ -325,24 +327,24 @@ def validate(args):
     for name, rows in candidates:
         header_row, headers = rows[0]
         if headers != HEADERS:
-            errors.append(f"{name}第{header_row}行表头必须严格为九列：" + "、".join(HEADERS))
+            errors.append(f"{name}第{header_row}行表头必须严格为{len(HEADERS)}列：" + "、".join(HEADERS))
         if len(rows) == 1:
             errors.append(f"{name}没有分镜数据行")
         sheet_sequences = []
         for row_number, values in rows[1:]:
             context = f"{name}第{row_number}行"
-            if len(values) > 9:
-                errors.append(f"{context}：九列之外存在非空数据")
-            cells = (values + [""] * 9)[:9]
-            seq = sequence_number(cells[1])
+            if len(values) > len(HEADERS):
+                errors.append(f"{context}：{len(HEADERS)}列之外存在非空数据（参考图最多{MAX_REFERENCES}张）")
+            cells = (values + [""] * len(HEADERS))[:len(HEADERS)]
+            seq = sequence_number(cells[COLUMN_INDEX["分镜序号"]])
             if seq is None:
                 errors.append(f"{context}：分镜序号必须为正整数，可用01、001或数值")
             else:
                 sheet_sequences.append(seq)
                 all_sequences.append(seq)
-            if cells[7] not in ("是", "否"):
-                errors.append(f"{context}：H列只能是“是”或“否”，不得附解释")
-            refs = cells[2:7]
+            if cells[COLUMN_INDEX["继承上一镜尾帧"]] not in ("是", "否"):
+                errors.append(f"{context}：“继承上一镜尾帧”列只能是“是”或“否”，不得附解释")
+            refs = [cells[COLUMN_INDEX[header]] for header in REFERENCE_HEADERS]
             empty_seen = False
             for number, path in enumerate(refs, 1):
                 if not path:
@@ -352,10 +354,11 @@ def validate(args):
                         errors.append(f"{context}：参考图{number}之前有空槽")
                     if not re.fullmatch(r"assets\\[^\\/\r\n]+\.png", path):
                         errors.append(f"{context}：参考图{number}路径必须为assets\\名称.png")
-            dialogues, group = check_prompt(cells[8], refs, context, errors)
+            reference_count = sum(bool(path) for path in refs)
+            dialogues, group = check_prompt(cells[COLUMN_INDEX["提示词"]], refs, context, errors)
             all_dialogues.extend(dialogues)
             group.update({"sheet": name, "row": row_number, "seq": seq,
-                          "reference_count": sum(bool(path) for path in refs)})
+                          "reference_count": reference_count})
             if plan is not None:
                 item = plan.get(seq)
                 if item is None:
