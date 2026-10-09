@@ -85,7 +85,7 @@ non_diegetic_music: None.
 
 温情：女儿从对面坐到母亲身旁，横移跟随走位，再切近双人镜接母亲答话。ordinary，共51个对白汉字。
 
-修订：切点由4.000／9.100秒改为2.500／8.800秒，首镜8个汉字不再占用4秒，中间镜头留6.30秒完成放包、绕桌和坐下。第三镜由原来的Hold改为真实切入更近的双人镜。首镜只拍女儿，母亲出镜记录据此修正。
+修订：切点由4.000／9.100秒改为2.500／8.800秒，首镜8个汉字不再占用4秒，中间镜头留6.30秒完成放包、绕桌和坐下。第三镜由原来的Hold改为真实切入更近的双人镜。首镜只拍女儿，母亲出镜记录据此修正。明确女儿坐到母亲自身右侧的空位，下一镜沿用落座后的邻座关系。
 
 参考图依次：
 
@@ -107,10 +107,10 @@ retention_analysis:
 <Subject 1> (appears in [Shot 2], [Shot 3]): fully_preserved - retain identity, hair and clothing.
 <Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - retain identity, hair and clothing.
 <Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - retain layout and light.
-detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the named speaker moves lips. Current state: In <Subject 3>, Zhixia stands frame left beside the table, wearing her brown shoulder bag. Mother sits on the sofa at frame right. The navy bank card remains on the table.
+detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the named speaker moves lips. Current state: In <Subject 3>, Zhixia stands frame left beside the table, wearing her brown shoulder bag. Mother sits across the table on the sofa at frame right, with an empty seat on her own right. The navy bank card remains on the table.
 [Shot 1] From 00:00.000 to 00:02.500, use a steady medium close-up of <Subject 2>. She looks from the table to Mother off-screen right, lowers her chin and loosens her grip on the bag strap. <Subject 2> (S3), in a clear, slightly bright young adult female Mandarin voice, says <d>[Chinese] 妈，是我钻牛角尖了。<scenetrans></d>. Delivery: tearful and apologetic.
-[Shot 2] At 00:02.500, Cut as <Subject 2> takes off her bag to a medium-wide two-shot. She sets the bag on the nearer sofa arm, walks around the open end of the table and sits beside <Subject 1>, continuing her sentence. Track laterally with her and stop when both women are seated, with the card on the table in front of them. <Subject 2> (S3), continues seamlessly with <d>[Chinese] <scenetrans>我只记着自己受的委屈，却忘了明远这些年受的累。</d>. Delivery: remorseful and clear throughout the move.
-[Shot 3] At 00:08.800, Cut as <Subject 1> turns to her seated daughter to a closer eye-level two-shot. Mother speaks gently; <Subject 2> meets her eyes and straightens slightly. Keep the camera steady through the reply. <Subject 1> (S1), in a slightly husky older female Mandarin voice, says <d>[Chinese] 一家人过日子，不怕吃点亏，就怕人人都只算自己的账。</d>. Delivery: warm and plainspoken. End at 00:15.000 with both women seated together.
+[Shot 2] At 00:02.500, Cut as <Subject 2> takes off her bag to a medium-wide two-shot. She sets the bag on the nearer sofa arm, walks around the open end of the table and sits in the empty seat on <Subject 1>'s right, continuing her sentence. Track laterally with her and stop with <Subject 2> seated frame left and <Subject 1> frame right, both facing the table with the card in front of them. <Subject 2> (S3), continues seamlessly with <d>[Chinese] <scenetrans>我只记着自己受的委屈，却忘了明远这些年受的累。</d>. Delivery: remorseful and clear throughout the move.
+[Shot 3] At 00:08.800, Cut as <Subject 1> turns to her seated daughter to a closer eye-level two-shot from the same side, keeping <Subject 2> frame left and <Subject 1> frame right in the same seats. Mother speaks gently; <Subject 2> meets her eyes and straightens slightly. Keep the camera steady through the reply. <Subject 1> (S1), in a slightly husky older female Mandarin voice, says <d>[Chinese] 一家人过日子，不怕吃点亏，就怕人人都只算自己的账。</d>. Delivery: warm and plainspoken. End at 00:15.000 with both women seated together.
 overall_soundscape: Dialogue only. No ambient sound or sound effects.
 non_diegetic_music: None.
 ```
