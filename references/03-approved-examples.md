@@ -4,7 +4,7 @@
 
 学习字段、参考绑定、具体表演、运镜及对白跨切写法；不迁移样例人物、台词、商品、组数或总时长。每例规划15秒，新剧本须重新分组计时。以下只完成文本规划，未实测配音或视频。
 
-以下样例各用3张参考图；写入当前十三列表格时保留参考图1—9列，参考图4—9留空。实际使用数量按 `01` 确定，不为凑满7张或9张添加参考。
+以下样例各用3张参考图；十三列表格的参考图4—9留空。参考数量与素材规划规则见 `01`。
 
 素材状态按实际任务核对，不能因样例列出了路径就认为PNG已经提供。例如首次制作下面的客厅戏、尚无客厅图时，在「填写说明」记录：
 
@@ -12,7 +12,7 @@
 |---|---|---|
 | 场景参考：家中客厅与玄关 | `assets\家中客厅与玄关.png`；待准备；适用本页原第1、11、13组示例 | 三组共用同一客厅与玄关布局；按正式剧本重新确定组号，相关组保留场景槽，备图并上传后使用。 |
 
-六位必要可见人物加一张商品图，再加一张必要场景图，共8张，属于允许用法；场景放第8槽，不为压回7张省掉。若另一个组全程为无可辨认背景、无空间关系任务的物件特写，可按 `01` 采用文字环境方案并记录理由。这些是素材规划示例，不要求增加第三张工作表或将准备说明写入提示词。
+扩展槽示例：六位必要可见人物＋商品＋场景共8张，场景列第8槽。素材准备说明放现有「填写说明」，不另增工作表或写入提示词。
 
 ## 目录
 
@@ -38,7 +38,7 @@
 
 争执：命令截停离开，追问接解释，拿走饺子阻止离开。urgent，共73个对白汉字。
 
-修订：切点由1.000／5.800／12.300秒改为0.650／5.050／12.250秒，四镜时长为0.65／4.40／7.20／2.75秒；第三镜36个汉字，按急切语气预留7.20秒。末镜改为能同时容纳脸、手和袋子的中景。禁止背景音乐和配乐；保留已有脚步、交接袋子的轻微自然声，保持对白清晰。
+时间与构图：四镜时长为0.65／4.40／7.20／2.75秒；第三镜36个汉字，按急切语气预留7.20秒。末镜中景同时容纳脸、手和袋子，拍清交接。
 
 参考图依次：
 
@@ -60,9 +60,9 @@ retention_analysis:
 <Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - retain identity, hair and clothing.
 <Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - retain identity, hair and clothing.
 <Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - retain layout and light.
-detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the current dialogue speaker forms the spoken words. Current state: In <Subject 3>, Mingyuan approaches the door with two clear bags of frozen uncooked dumplings in his right hand; Mother follows from the living room.
-[Shot 1] From 00:00.000 to 00:00.650, use a knee-up lateral two-shot. <Subject 2> moves screen right; <Subject 1> approaches from screen left. Track his last half-step, then stop with him at her command. <Subject 1> (S1), in a slightly husky older female Mandarin voice, says <d>[Chinese] 站住！</d>. Delivery: loud and sharply commanding.
-[Shot 2] At 00:00.650, Cut on his stop to a waist-up two-shot from the same side. <Subject 1> indicates the two bags and fixes <Subject 2> with an angry stare. Push closer to her face, retaining his tense profile at frame right. <Subject 1> (S1), says <d>[Chinese] 你妈摔断了腿，你就拎着两袋冻了半个月的饺子去医院？</d>. Delivery: fast, incredulous and forceful.
+detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the current dialogue speaker forms the spoken words. Current state: In <Subject 3>, <Subject 2> approaches the door with two clear bags of frozen uncooked dumplings in his right hand; <Subject 1> follows from the living room.
+[Shot 1] Use a knee-up lateral two-shot. <Subject 2> moves screen right; <Subject 1> approaches from screen left. Track his last half-step, then stop with him at her command. <Subject 1> (S1), in a slightly husky older female Mandarin voice, says <d>[Chinese] 站住！</d>. Delivery: loud and sharply commanding.
+[Shot 2] At 00:00.650, Cut on <Subject 2>'s stop to a waist-up two-shot from the same side. <Subject 1> indicates the two bags and fixes <Subject 2> with an angry stare. Push closer to her face, retaining his tense profile at frame right. <Subject 1> (S1), says <d>[Chinese] 你妈摔断了腿，你就拎着两袋冻了半个月的饺子去医院？</d>. Delivery: fast, incredulous and forceful.
 [Shot 3] At 00:05.050, Cut to <Subject 2> in medium close-up, with <Subject 1>'s right shoulder at frame left. He addresses her anxiously, then glances at the door while holding the bags down. Keep the camera steady. <Subject 2> (S2), in a warm, mid-register young adult male Mandarin voice, says <d>[Chinese] 妈，您都知道了？我爸刚打电话，说我妈在医院等手术。我想着她爱吃饺子，等出院了给她煮。</d>. Delivery: quick, anxious and pleading.
 [Shot 4] At 00:12.250, Cut as <Subject 1> reaches for the handles to a medium two-shot including both faces, hands and bags. She firmly takes both bags from <Subject 2>; he releases them and draws his empty hand back. The closed door remains behind him. <Subject 1> (S1), says <d>[Chinese] 这饺子是我留着吃的，你放下。</d>. Delivery: firm and final. End at 00:15.000 with Mother holding both bags and Mingyuan facing her empty-handed.
 overall_soundscape: Clear dialogue, with a soft footstep as Mingyuan stops and light plastic-bag rustles as Mother takes the bags, below the voices.
@@ -73,7 +73,7 @@ non_diegetic_music: None.
 
 道具：银行卡放下触发物件镜头，母亲的原句跨切不断，女儿伸手后收回。ordinary，共53个对白汉字。
 
-修订：保留3.600／4.900／10.900秒切点；第一镜只拍母亲，出镜记录据此修正。末镜使用容纳女儿脸、手与桌面银行卡的侧面中景。切点由可见动作触发，不依赖落桌声。
+时间与构图：切点为3.600／4.900／10.900秒；第一镜只拍母亲，末镜侧面中景容纳女儿脸、手与桌面银行卡。切点由可见动作触发，不依赖落桌声。
 
 参考图依次：
 
@@ -95,11 +95,11 @@ retention_analysis:
 <Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - retain identity, hair and clothing.
 <Subject 2> (appears in [Shot 3], [Shot 4]): fully_preserved - retain identity, hair and clothing.
 <Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - retain layout and light.
-detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the current dialogue speaker forms the spoken words. Current state: In <Subject 3>, Mother sits forward on the sofa, reaching into her vest pocket with her right hand. Zhixia stands across the coffee table with her brown shoulder bag on.
-[Shot 1] From 00:00.000 to 00:03.600, continue a medium close-up of <Subject 1> addressing Zhixia. She takes one navy bank card from her vest pocket and places it on the table; tilt down with her hand to the placement. <Subject 1> (S1), in a slightly husky older female Mandarin voice, says <d>[Chinese] 这里有五万块，是我攒的养老钱。<scenetrans></d>. Delivery: steady and matter-of-fact.
+detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the current dialogue speaker forms the spoken words. Current state: In <Subject 3>, <Subject 1> sits forward on the sofa, reaching into her vest pocket with her right hand. <Subject 2> stands across the coffee table with her brown shoulder bag on.
+[Shot 1] Continue a medium close-up of <Subject 1> addressing <Subject 2> off-screen. She takes one navy bank card from her vest pocket and places it on the table; tilt down with her hand to the placement. <Subject 1> (S1), in a slightly husky older female Mandarin voice, says <d>[Chinese] 这里有五万块，是我攒的养老钱。<scenetrans></d>. Delivery: steady and matter-of-fact.
 [Shot 2] At 00:03.600, Cut on the card reaching the table to an overhead detail of the navy card lying flat. <Subject 1>'s right fingertips withdraw. <Subject 1> (S1), off-screen beside the table, continues seamlessly with <d>[Chinese] <scenetrans>密码是你生日。<scenetrans></d>. Delivery: the same voice, softening gently.
 [Shot 3] At 00:04.900, Cut back to a medium two-shot across the table, <Subject 1> seated frame left and <Subject 2> standing frame right. The card lies between them. Mother draws her right hand back; Zhixia leans toward the table and reaches for the card, stopping short of touching it. <Subject 1> (S1), continues seamlessly with <d>[Chinese] <scenetrans>拿去给你婆婆做手术，该检查就检查，该用药就用药。</d>. Delivery: practical and unwavering.
-[Shot 4] At 00:10.900, Cut on the stopped hand to a closer side medium shot including <Subject 2>'s face, hand and the card; <Subject 1> remains at frame left. Zhixia immediately refuses and draws her hand back, looking at Mother with tearful eyes. <Subject 2> (S3), in a clear, slightly bright young adult female Mandarin voice, says <d>[Chinese] 不行，这是您的养老钱，我不能拿。</d>. Delivery: startled, urgent and worried. End at 00:15.000 with the card still on the table.
+[Shot 4] At 00:10.900, Cut on <Subject 2>'s stopped hand to a closer side medium shot including <Subject 2>'s face, hand and the card; <Subject 1> remains at frame left. Zhixia immediately refuses and draws her hand back, looking at Mother with tearful eyes. <Subject 2> (S3), in a clear, slightly bright young adult female Mandarin voice, says <d>[Chinese] 不行，这是您的养老钱，我不能拿。</d>. Delivery: startled, urgent and worried. End at 00:15.000 with the card still on the table.
 overall_soundscape: Clear dialogue, with one light tap as the bank card contacts the wooden table, below the voices.
 non_diegetic_music: None.
 ```
@@ -108,7 +108,7 @@ non_diegetic_music: None.
 
 温情：女儿从对面坐到母亲身旁，横移跟随走位，再切近双人镜接母亲答话。ordinary，共51个对白汉字。
 
-修订：切点由4.000／9.100秒改为2.500／8.800秒，首镜8个汉字不再占用4秒，中间镜头留6.30秒完成放包、绕桌和坐下。第三镜由原来的Hold改为真实切入更近的双人镜。首镜只拍女儿，母亲出镜记录据此修正。明确女儿坐到母亲自身右侧的空位，下一镜沿用落座后的邻座关系。
+时间与构图：切点为2.500／8.800秒；首镜只拍女儿，中镜留6.30秒完成放包、绕桌和坐到母亲自身右侧。第三镜切近双人镜，沿用落座后的邻座关系。
 
 参考图依次：
 
@@ -130,10 +130,10 @@ retention_analysis:
 <Subject 1> (appears in [Shot 2], [Shot 3]): fully_preserved - retain identity, hair and clothing.
 <Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - retain identity, hair and clothing.
 <Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - retain layout and light.
-detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the current dialogue speaker forms the spoken words. Current state: In <Subject 3>, Zhixia stands frame left beside the table, wearing her brown shoulder bag. Mother sits across the table on the sofa at frame right, with an empty seat on her own right. The navy bank card remains on the table.
-[Shot 1] From 00:00.000 to 00:02.500, use a steady medium close-up of <Subject 2>. She looks from the table to Mother off-screen right, lowers her chin and loosens her grip on the bag strap. <Subject 2> (S3), in a clear, slightly bright young adult female Mandarin voice, says <d>[Chinese] 妈，是我钻牛角尖了。<scenetrans></d>. Delivery: tearful and apologetic.
+detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the current dialogue speaker forms the spoken words. Current state: In <Subject 3>, <Subject 2> stands frame left beside the table, wearing her brown shoulder bag. <Subject 1> sits across the table on the sofa at frame right, with an empty seat on her own right. The navy bank card remains on the table.
+[Shot 1] Use a steady medium close-up of <Subject 2>. She looks from the table to <Subject 1> off-screen right, lowers her chin and loosens her grip on the bag strap. <Subject 2> (S3), in a clear, slightly bright young adult female Mandarin voice, says <d>[Chinese] 妈，是我钻牛角尖了。<scenetrans></d>. Delivery: tearful and apologetic.
 [Shot 2] At 00:02.500, Cut as <Subject 2> takes off her bag to a medium-wide two-shot. She sets the bag on the nearer sofa arm, walks around the open end of the table and sits in the empty seat on <Subject 1>'s right, continuing her sentence. Track laterally with her and stop with <Subject 2> seated frame left and <Subject 1> frame right, both facing the table with the card in front of them. <Subject 2> (S3), continues seamlessly with <d>[Chinese] <scenetrans>我只记着自己受的委屈，却忘了明远这些年受的累。</d>. Delivery: remorseful and clear throughout the move.
-[Shot 3] At 00:08.800, Cut as <Subject 1> turns to her seated daughter to a closer eye-level two-shot from the same side, keeping <Subject 2> frame left and <Subject 1> frame right in the same seats. Mother speaks gently; <Subject 2> meets her eyes and straightens slightly. Keep the camera steady through the reply. <Subject 1> (S1), in a slightly husky older female Mandarin voice, says <d>[Chinese] 一家人过日子，不怕吃点亏，就怕人人都只算自己的账。</d>. Delivery: warm and plainspoken. End at 00:15.000 with both women seated together.
+[Shot 3] At 00:08.800, Cut as <Subject 1> turns to <Subject 2> to a closer eye-level two-shot from the same side, keeping <Subject 2> frame left and <Subject 1> frame right in the same seats. Mother speaks gently; <Subject 2> meets her eyes and straightens slightly. Keep the camera steady through the reply. <Subject 1> (S1), in a slightly husky older female Mandarin voice, says <d>[Chinese] 一家人过日子，不怕吃点亏，就怕人人都只算自己的账。</d>. Delivery: warm and plainspoken. End at 00:15.000 with both women seated together.
 overall_soundscape: Clear dialogue, with soft footsteps as Zhixia walks around the table and a faint clothing rustle as she sits, below the voices.
 non_diegetic_music: None.
 ```
@@ -148,7 +148,7 @@ non_diegetic_music: None.
 - 林清：“您以前怎么从来没跟我说过？”
 - 赵姨：“我怕你自责。你父亲当年的日记里，把那天的事记得清清楚楚。”
 
-规划：ordinary，共57个对白汉字；三镜为0—4.8秒、4.8—8.2秒、8.2—15秒。保留原切点，三个镜头持续推进对白，未添加独立动作填时。
+规划：ordinary，共57个对白汉字；三镜为0—4.8秒、4.8—8.2秒、8.2—15秒，持续推进对白，不添加独立动作填时。
 
 参考图依次（教学示意，未随 Skill 提供这些 PNG）：
 
@@ -171,9 +171,9 @@ retention_analysis:
 <Subject 2> (appears in [Shot 1], [Shot 3]): fully_preserved - retain identity, hair and clothing.
 <Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - retain chair positions, window direction and daylight.
 detailed_description: No subtitles or captions. Photorealistic contemporary Chinese family drama. Only the current dialogue speaker forms the spoken words. Current state: In <Subject 3>, <Subject 1> sits frame left facing <Subject 2> seated on the right.
-[Shot 1] From 00:00.000 to 00:04.800, use a steady waist-up two-shot. <Subject 2> speaks directly to <Subject 1>, whose expression grows tense as she listens. <Subject 2> (S5), in a low, slightly husky older female Mandarin voice, says <d>[Chinese] 你哥哥右手腕有一道旧疤，是小时候救你留下的。</d>. Delivery: measured and serious.
-[Shot 2] At 00:04.800, Cut at the end of Zhao's sentence to a clean medium close-up of <Subject 1> looking frame right at Zhao. She questions her immediately with a hurt, angry expression. <Subject 1> (S2), in a clear young adult female Mandarin voice, says <d>[Chinese] 您以前怎么从来没跟我说过？</d>. Delivery: urgent, rising in pitch on the question.
-[Shot 3] At 00:08.200, Cut as Zhao answers to a clean medium close-up of <Subject 2> looking frame left at Lin Qing. Make one slow push toward her face, ending in a close-up. <Subject 2> (S5), in the same older female Mandarin voice, says <d>[Chinese] 我怕你自责。你父亲当年的日记里，把那天的事记得清清楚楚。</d>. Delivery: subdued at first, then firm and clear. Complete the reply and push by 00:15.000.
+[Shot 1] Use a steady waist-up two-shot. <Subject 2> speaks directly to <Subject 1>, whose expression grows tense as she listens. <Subject 2> (S5), in a low, slightly husky older female Mandarin voice, says <d>[Chinese] 你哥哥右手腕有一道旧疤，是小时候救你留下的。</d>. Delivery: measured and serious.
+[Shot 2] At 00:04.800, Cut at the end of <Subject 2>'s sentence to a clean medium close-up of <Subject 1> looking frame right toward <Subject 2> off-screen. <Subject 1> questions her immediately with a hurt, angry expression. <Subject 1> (S2), in a clear young adult female Mandarin voice, says <d>[Chinese] 您以前怎么从来没跟我说过？</d>. Delivery: urgent, rising in pitch on the question.
+[Shot 3] At 00:08.200, Cut as <Subject 2> answers to a clean medium close-up of her looking frame left toward <Subject 1> off-screen. Make one slow push toward <Subject 2>'s face, ending in a close-up. <Subject 2> (S5), in the same older female Mandarin voice, says <d>[Chinese] 我怕你自责。你父亲当年的日记里，把那天的事记得清清楚楚。</d>. Delivery: subdued at first, then firm and clear. Complete the reply and push by 00:15.000.
 overall_soundscape: Clear dialogue over faint living-room tone.
 non_diegetic_music: None.
 ```
