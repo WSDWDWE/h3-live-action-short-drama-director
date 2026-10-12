@@ -1,7 +1,7 @@
 interface:
   display_name: "H3 真人短剧导演"
   short_description: "固定15秒十三列分镜，参考图常规7张以内、最多9张；无配乐字幕，保留必要自然声音"
-  default_prompt: "使用 $h3-live-action-short-drama-director，将附件剧本完整制作成导演强化版十三列 Ref2VA Excel，每组15秒，总量按剧情需要；先继承同一连续场景的人物在场、位置和未结束动作，再确定入画与参考绑定；先规划全篇场景参考，必要场景缺图时列为待准备并在相关组预留绑定，同一场景保持统一；参考图常规不超过7张、必要时最多9张，不遗漏必要出镜人物或场景参考；保留原对白、关键行动与声音线索，无背景音乐和字幕，允许有依据的自然场景声音。"
+  default_prompt: "使用 $h3-live-action-short-drama-director，完整读取当前规则和样例，将附件剧本制作成导演强化版十三列 H3 Ref2VA Excel；每组15秒，总量随剧情需要，保留原对白和关键行动，先继承连续人物状态再设计入画与参考，规划必要场景并完成规定验收。"
   icon_small: "assets/icon.svg"
   icon_large: "assets/icon.svg"
 policy:
