@@ -6,8 +6,12 @@ Usage: validate_storyboard.py --xlsx storyboard.xlsx
 
 Dialogue JSON: [{"speaker_id": "S1", "text": "原句。"}, ...], or a list
 of strings (which checks only the complete dialogue text, not speakers).
-Plan JSON: [{"seq": 1, "mode": "ordinary", "state_changes": [...]}, ...].
-This checks prompt text, not generated video, speech, or semantic quality.
+Plan JSON: [{"seq": 1, "mode": "ordinary", "state_changes": [...],
+             "shots": [{"shot": 1, "visible_subjects": [1, 2, 3]}, ...]}, ...].
+visible_subjects includes every actually visible reference Subject (including
+partial people, scenes and products), not off-screen speakers or people merely
+mentioned. The independent source/continuity review determines who should be
+present; this script checks declared sets, not that semantic decision or video.
 """
 
 import argparse
@@ -31,6 +35,11 @@ NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 FIELD_RE = re.compile(r"^\s*(" + "|".join(FIELDS) + r")\s*:", re.M)
 SHOT_RE = re.compile(r"\[Shot\s+(\d+)\]")
+RETENTION_RE = re.compile(
+    r"<Subject\s+(\d+)>\s*\(appears in\s+"
+    r"(\[Shot\s+\d+\](?:\s*,\s*\[Shot\s+\d+\])*)\)\s*:\s*"
+    r"(fully_preserved|partially_preserved|attribute_transfer|weak_reference)"
+    r"\s+-\s+\S.*")
 VOICE_RE = re.compile(r"\((S\d+)\)")
 TRANS_RE = re.compile(r"</?scenetrans\s*>")
 CHAR_RE = re.compile(r"[A-Za-z0-9\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff"
@@ -39,7 +48,9 @@ RANGES = {"ordinary": (45, 70), "urgent": (55, 80), "action": (20, 55)}
 MANUAL_CHECKS = [
     "逐镜按实际可用说话时间复核语速、停顿与对白可演性。",
     "人工复核参考图类型、身份及重要性排序；文本映射不能证明图片内容正确。",
-    "人工复核切镜是否真实有效、空间与人物连续性，以及动作覆盖是否足够。",
+    "从原稿和跨组状态独立复核在场人物、位置及持续动作；脚本不能判断谁应在场或是否遗漏原稿人物。",
+    "人工复核逐镜visible_subjects是否符合构图（含人物局部、场景、商品），区分画外声与可见人物；程序只核对声明集合。",
+    "人工复核切镜是否真实有效、空间与人物连续性，以及动作覆盖是否足够；字段一致不能代替原稿覆盖检查。",
     "人工复核段落类别及state_changes是否为不同且实际可见的状态变化；脚本仅计数。",
     "人工复核同一(Sn)是否始终绑定同一人物、声线与声音来源。",
     "本报告不验证成片、实际发声、口型或最终生成效果。",
@@ -134,6 +145,36 @@ def read_json(path, label, errors):
         return None
 
 
+def parse_shot_plan(shots, fail):
+    """Validate explicit visibility declarations without inferring prose meaning."""
+    if not isinstance(shots, list) or not shots:
+        fail("shots必须为非空逐镜数组，每项包含shot及visible_subjects")
+        return {}
+    result = {}
+    for index, item in enumerate(shots, 1):
+        if not isinstance(item, dict):
+            fail(f"shots第{index}项必须为对象")
+            continue
+        shot = item.get("shot")
+        if type(shot) is not int or shot < 1:
+            fail(f"shots第{index}项shot必须为正整数")
+            continue
+        if shot in result:
+            fail(f"shots中Shot {shot}重复")
+            continue
+        visible = item.get("visible_subjects")
+        if not isinstance(visible, list) or any(
+                type(number) is not int or not 1 <= number <= MAX_REFERENCES
+                for number in visible):
+            fail(f"Shot {shot}的visible_subjects必须为1—{MAX_REFERENCES}的整数数组")
+            result[shot] = set()
+            continue
+        if len(visible) != len(set(visible)):
+            fail(f"Shot {shot}的visible_subjects有重复Subject")
+        result[shot] = set(visible)
+    return result
+
+
 def load_plan(path, errors):
     data = read_json(path, "plan-json", errors)
     if data is None:
@@ -156,11 +197,13 @@ def load_plan(path, errors):
             changes = []
         if item.get("mode") == "action" and len(changes) < 3:
             errors.append(f"plan-json序号{seq}的action至少需要3个state_changes")
+        parse_shot_plan(item.get("shots"), lambda message: errors.append(
+            f"plan-json序号{seq}：{message}"))
         plan[seq] = item
     return plan
 
 
-def check_prompt(prompt, refs, context, errors):
+def check_prompt(prompt, refs, context, errors, shot_plan=None):
     def fail(message):
         errors.append(f"{context}：{message}")
 
@@ -202,6 +245,50 @@ def check_prompt(prompt, refs, context, errors):
         fail(f"每组必须有3或4个[Shot N]，实际{len(shots)}个")
     if shot_ids != list(range(1, len(shots) + 1)):
         fail(f"Shot编号必须从1连续递增，实际{shot_ids}")
+
+    # Retention is an explicit visibility declaration. A Subject mentioned in
+    # dialogue, a gaze target or an off-screen voice does not establish visibility.
+    retained_subjects = set()
+    retained_by_shot = {number: set() for number in shot_ids}
+    for line_number, line in enumerate(fields.get("retention_analysis", "").splitlines(), 1):
+        line = line.strip()
+        if not line:
+            continue
+        match = RETENTION_RE.fullmatch(line)
+        if match is None:
+            fail(f"retention_analysis第{line_number}行格式无法解析；须逐行写Subject、appears in镜头列表、保留类型及说明")
+            continue
+        subject = int(match.group(1))
+        if subject in retained_subjects:
+            fail(f"retention_analysis中<Subject {subject}>重复")
+        retained_subjects.add(subject)
+        if subject not in defined:
+            fail(f"retention_analysis引用了未定义的<Subject {subject}>")
+        appearances = [int(value) for value in SHOT_RE.findall(match.group(2))]
+        if len(appearances) != len(set(appearances)):
+            fail(f"retention_analysis中<Subject {subject}>的Shot记录重复")
+        for number in appearances:
+            if number not in retained_by_shot:
+                fail(f"retention_analysis中<Subject {subject}>引用了不存在的Shot {number}")
+            else:
+                retained_by_shot[number].add(subject)
+    missing_retention = sorted(defined - retained_subjects)
+    if missing_retention:
+        fail(f"retention_analysis缺少已定义Subject的出镜记录：{missing_retention}")
+
+    if shot_plan is not None:
+        planned_by_shot = parse_shot_plan(shot_plan, fail)
+        if set(planned_by_shot) != set(shot_ids):
+            fail(f"plan-json的Shot集合与正文不一致：计划{sorted(planned_by_shot)}，正文{shot_ids}")
+        for number, visible in planned_by_shot.items():
+            undefined = sorted(visible - defined)
+            if undefined:
+                fail(f"plan-json中Shot {number}的visible_subjects引用未定义Subject：{undefined}")
+            if number in retained_by_shot and visible != retained_by_shot[number]:
+                missing = sorted(visible - retained_by_shot[number])
+                extra = sorted(retained_by_shot[number] - visible)
+                fail(f"Shot {number}的retention出镜集合与plan-json不一致：缺少{missing}，多出{extra}")
+
     starts = []
     previous_start = 0.0
     for index, match in enumerate(shots):
@@ -306,7 +393,7 @@ def validate(args):
     errors, warnings, stats = report["errors"], report["warnings"], report["stats"]
     plan = load_plan(args.plan_json, errors) if args.plan_json else None
     if plan is None:
-        warnings.append("未提供plan-json：未按ordinary/urgent/action段落类别核验字数与状态变化数量")
+        warnings.append("未提供plan-json：未按ordinary/urgent/action段落类别核验字数与状态变化数量，也未将逐镜可见Subject计划与retention出镜记录交叉核对")
     if not args.dialogue_json:
         warnings.append("未提供dialogue-json：未与原剧本逐字核验对白及说话者顺序")
     try:
@@ -355,12 +442,14 @@ def validate(args):
                     if not re.fullmatch(r"assets\\[^\\/\r\n]+\.png", path):
                         errors.append(f"{context}：参考图{number}路径必须为assets\\名称.png")
             reference_count = sum(bool(path) for path in refs)
-            dialogues, group = check_prompt(cells[COLUMN_INDEX["提示词"]], refs, context, errors)
+            item = plan.get(seq) if plan is not None else None
+            dialogues, group = check_prompt(
+                cells[COLUMN_INDEX["提示词"]], refs, context, errors,
+                shot_plan=item.get("shots") if item is not None else None)
             all_dialogues.extend(dialogues)
             group.update({"sheet": name, "row": row_number, "seq": seq,
                           "reference_count": reference_count})
             if plan is not None:
-                item = plan.get(seq)
                 if item is None:
                     errors.append(f"{context}：plan-json中缺少序号{seq}")
                 elif item.get("mode") in RANGES:
