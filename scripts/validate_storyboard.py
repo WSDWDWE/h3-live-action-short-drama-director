@@ -7,7 +7,12 @@ Usage: validate_storyboard.py --xlsx storyboard.xlsx
 Dialogue JSON: [{"speaker_id": "S1", "text": "原句。"}, ...], or a list
 of strings (which checks only the complete dialogue text, not speakers).
 Plan JSON: [{"seq": 1, "mode": "ordinary", "state_changes": [...],
+             "speakers": {"S1": 1, "S7": null},
              "shots": [{"shot": 1, "visible_subjects": [1, 2, 3]}, ...]}, ...].
+speakers maps each speaking voice to its local Subject, or null only when that
+person has no Subject and is heard exclusively off-screen throughout this group.
+An optional capacity_exception object with kind='short_source_unmergeable',
+reason and timing_review may waive only a lower character bound, pending review.
 visible_subjects includes every actually visible reference Subject (including
 partial people, scenes and products), not off-screen speakers or people merely
 mentioned. The independent source/continuity review determines who should be
@@ -34,11 +39,12 @@ FIELDS = ["subject_definitions", "summary", "retention_analysis",
 NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 FIELD_RE = re.compile(r"^\s*(" + "|".join(FIELDS) + r")\s*:", re.M)
+TOP_FIELD_RE = re.compile(r"^[ \t]*([a-z][a-z0-9_]*)[ \t]*:", re.M)
 SHOT_RE = re.compile(r"\[Shot\s+(\d+)\]")
 RETENTION_RE = re.compile(
     r"<Subject\s+(\d+)>\s*\(appears in\s+"
     r"(\[Shot\s+\d+\](?:\s*,\s*\[Shot\s+\d+\])*)\)\s*:\s*"
-    r"(fully_preserved|partially_preserved|attribute_transfer|weak_reference)"
+    r"(fully_preserved)"
     r"\s+-\s+\S.*")
 VOICE_RE = re.compile(r"\((S\d+)\)")
 TRANS_RE = re.compile(r"</?scenetrans\s*>")
@@ -52,7 +58,8 @@ MANUAL_CHECKS = [
     "人工复核逐镜visible_subjects是否符合构图（含人物局部、场景、商品），区分画外声与可见人物；程序只核对声明集合。",
     "人工复核切镜是否真实有效、空间与人物连续性，以及动作覆盖是否足够；字段一致不能代替原稿覆盖检查。",
     "人工复核段落类别及state_changes是否为不同且实际可见的状态变化；脚本仅计数。",
-    "人工复核同一(Sn)是否始终绑定同一人物、声线与声音来源。",
+    "人工复核同一(Sn)是否始终绑定同一人物、声线与声音来源；绑定声明检查不能证明身份或声源真实无误。",
+    "申报capacity_exception时人工复核原稿确实很短、不能合理合组及逐镜时间安排；程序只核对申报字段和容量边界。",
     "本报告不验证成片、实际发声、口型或最终生成效果。",
 ]
 
@@ -199,16 +206,46 @@ def load_plan(path, errors):
             errors.append(f"plan-json序号{seq}的action至少需要3个state_changes")
         parse_shot_plan(item.get("shots"), lambda message: errors.append(
             f"plan-json序号{seq}：{message}"))
+        parse_speakers(item.get("speakers"), lambda message: errors.append(
+            f"plan-json序号{seq}：{message}"))
+        if "capacity_exception" in item and not valid_capacity_exception(item["capacity_exception"]):
+            errors.append(f"plan-json序号{seq}：capacity_exception须含kind='short_source_unmergeable'、非空reason及timing_review")
         plan[seq] = item
     return plan
 
 
-def check_prompt(prompt, refs, context, errors, shot_plan=None):
+def parse_speakers(speakers, fail):
+    if not isinstance(speakers, dict):
+        fail("speakers必须为对象：以Sn为键，已绑定Subject编号为值，整组纯声音人物为null；无对白用{}")
+        return {}
+    result = {}
+    for voice, subject in speakers.items():
+        if (not isinstance(voice, str) or not re.fullmatch(r"S\d+", voice) or
+                subject is not None and (type(subject) is not int or not 1 <= subject <= MAX_REFERENCES)):
+            fail(f"speakers条目无效：{voice!r} -> {subject!r}")
+            continue
+        if subject is not None and subject in result.values():
+            fail(f"speakers中Subject {subject}绑定多个声线")
+        result[voice] = subject
+    return result
+
+
+def valid_capacity_exception(value):
+    return (isinstance(value, dict) and value.get("kind") == "short_source_unmergeable"
+            and all(isinstance(value.get(key), str) and value[key].strip()
+                    for key in ("reason", "timing_review")))
+
+
+def check_prompt(prompt, refs, context, errors, shot_plan=None, speaker_plan=None):
     def fail(message):
         errors.append(f"{context}：{message}")
 
     if not prompt.lstrip().startswith("subject_definitions:"):
         fail("提示词必须从subject_definitions:开始，不加标题或导演分析前缀")
+    outside_dialogue = re.sub(r"<d>.*?</d>", "", prompt, flags=re.S)
+    unknown_fields = sorted(set(TOP_FIELD_RE.findall(outside_dialogue)) - set(FIELDS))
+    if unknown_fields:
+        fail(f"出现六字段以外的顶层字段：{unknown_fields}")
     field_matches = list(FIELD_RE.finditer(prompt))
     if [match.group(1) for match in field_matches] != FIELDS:
         fail("六字段必须各出现一次，且顺序为" + "、".join(FIELDS))
@@ -218,6 +255,12 @@ def check_prompt(prompt, refs, context, errors, shot_plan=None):
         fields[match.group(1)] = prompt[match.end():end].strip()
         if not fields[match.group(1)]:
             fail(f"字段{match.group(1)}内容为空")
+    if fields.get("non_diegetic_music") != "None.":
+        fail("non_diegetic_music必须严格为None.")
+    summary = fields.get("summary", "")
+    if not ("[reference generation]" in summary and re.search(r"\b15-second\b", summary)
+            and re.search(r"\bvertical\s+9:16\b", summary)):
+        fail("summary须含[reference generation]、15-second及vertical 9:16")
 
     definitions = fields.get("subject_definitions", "")
     subjects = list(re.finditer(r"<Subject\s+(\d+)>", definitions))
@@ -232,13 +275,21 @@ def check_prompt(prompt, refs, context, errors, shot_plan=None):
         pictures = [int(value) for value in re.findall(r"\bfrom\s+<Picture\s+(\d+)>", body)]
         if pictures != [number]:
             fail(f"<Subject {number}>必须对应且仅对应from <Picture {number}>")
-        if not 1 <= number <= MAX_REFERENCES or not refs[number - 1]:
+        if not 1 <= number <= min(MAX_REFERENCES, len(refs)) or not refs[number - 1]:
             fail(f"<Subject {number}>没有对应的非空参考图槽位")
     for number, path in enumerate(refs, 1):
         if path and number not in defined:
             fail(f"参考图{number}缺少<Subject {number}> ... from <Picture {number}>定义")
+    for kind, value in set(re.findall(r"<(Subject|Picture)\s+(\d+)>", outside_dialogue)):
+        if int(value) not in defined:
+            fail(f"提示词引用了未定义的<{kind} {value}>")
 
     detailed = fields.get("detailed_description", "")
+    if not detailed.startswith("No subtitles or captions."):
+        fail("detailed_description须以No subtitles or captions.开始")
+    for minutes, seconds in re.findall(r"\bEnd at\s+(\d{2}):(\d{2}(?:\.\d+)?)", detailed, re.I):
+        if int(minutes) * 60 + float(seconds) != 15:
+            fail("显式End at结束时间必须为00:15.000")
     shots = list(SHOT_RE.finditer(detailed))
     shot_ids = [int(match.group(1)) for match in shots]
     if len(shots) not in (3, 4):
@@ -296,8 +347,8 @@ def check_prompt(prompt, refs, context, errors, shot_plan=None):
         body = detailed[match.end():end]
         if index == 0:
             starts.append(0.0)
-            if re.search(r"\bAt\s+\d{2}:\d{2}(?:\.\d+)?", body):
-                fail("Shot 1不能带At时间")
+            if re.match(r"\s*(?:At|From)\s+\d{2}:\d{2}", body, re.I):
+                fail("Shot 1不写At或From时间，直接写镜头内容")
         else:
             timestamp = re.match(r"\s*At\s+00:(\d{2})\.(\d{3})(?=[,，\s]|$)", body)
             if timestamp is None:
@@ -308,24 +359,47 @@ def check_prompt(prompt, refs, context, errors, shot_plan=None):
                 if not previous_start < seconds < 15:
                     fail(f"Shot {shot_ids[index]}时间必须严格递增且0<t<15，实际{seconds:g}")
                 previous_start = seconds
-        for number in map(int, re.findall(r"<Subject\s+(\d+)>", body)):
-            if number not in defined:
-                fail(f"Shot {shot_ids[index]}引用了未定义的<Subject {number}>")
 
     dialogue_matches = list(re.finditer(r"<d>(.*?)</d>", detailed, re.S))
     if detailed.count("<d>") != len(dialogue_matches) or detailed.count("</d>") != len(dialogue_matches):
         fail("对白<d>与</d>标签不成对")
     dialogues = []
     previous_end = 0
-    speaker = None
+    planned_speakers = parse_speakers(speaker_plan, fail) if speaker_plan is not None else None
+    for voice, subject in (planned_speakers or {}).items():
+        if subject is not None and subject not in defined:
+            fail(f"speakers中{voice}引用未定义Subject {subject}")
+    observed_speakers = {}
     for index, match in enumerate(dialogue_matches, 1):
         prefix = detailed[previous_end:match.start()]
-        voices = VOICE_RE.findall(prefix)
-        if voices:
-            speaker = voices[-1]
-        elif TRANS_RE.sub("", prefix).strip() or speaker is None:
-            speaker = None
-            fail(f"第{index}段对白前缺少(Sn)声线标签，例如(S1)")
+        voices = list(VOICE_RE.finditer(prefix))
+        speaker = None
+        if not voices:
+            fail(f"第{index}段对白前缺少独立的(Sn)声线声明，不沿用上一段")
+        else:
+            declaration = voices[-1]
+            speaker = declaration.group(1)
+            before = prefix[:declaration.start()]
+            after = prefix[declaration.end():]
+            bound = re.search(r"<Subject\s+(\d+)>\s*$", before)
+            subject = int(bound.group(1)) if bound else None
+            if SHOT_RE.search(after):
+                fail(f"第{index}段对白前的声线声明不能跨Shot沿用，须在本镜为本段重新声明")
+            if planned_speakers is not None and (
+                    speaker not in planned_speakers or planned_speakers[speaker] != subject):
+                fail(f"第{index}段对白{speaker}与speakers计划不一致；已绑定人物须用<Subject N> (Sx)")
+            if speaker in observed_speakers and observed_speakers[speaker] != subject:
+                fail(f"同组{speaker}绑定不一致，画外续说也须保留原<Subject N> (Sx)")
+            if subject is not None and any(other != speaker and value == subject
+                                           for other, value in observed_speakers.items()):
+                fail(f"同组Subject {subject}使用了多个声线")
+            observed_speakers[speaker] = subject
+            if subject is None:
+                identity = re.split(r"[.!?。！？\n]|\[Shot\s+\d+\]", before)[-1].strip()
+                if not identity or identity.lower() in {"he", "she", "they", "it", "him", "her", "them", "voice", "his voice", "her voice"}:
+                    fail(f"第{index}段纯声音人物须在(Sx)前写稳定身份，不能只写代词或声线")
+                if not after.strip(" \t\r\n,，:"):
+                    fail(f"第{index}段纯声音人物的声线声明缺少说明；声源是否清楚须人工复核")
         content = re.match(r"\s*\[Chinese\](.*)\Z", match.group(1), re.S)
         if content is None:
             fail(f"第{index}段对白缺少[Chinese]语言标签")
@@ -334,11 +408,14 @@ def check_prompt(prompt, refs, context, errors, shot_plan=None):
             text = clean_dialogue(content.group(1))
         dialogues.append({"speaker_id": speaker, "text": text})
         previous_end = match.end()
+    if planned_speakers is not None and set(planned_speakers) != set(observed_speakers):
+        fail(f"speakers须恰好列出本组实际开口声线：计划{sorted(planned_speakers)}，正文{sorted(observed_speakers)}")
     character_count = sum(len(CHAR_RE.findall(item["text"])) for item in dialogues)
     if character_count > 80:
         fail(f"本组对白{character_count}字，超过80字上限（计汉字及英数字字符）")
     return dialogues, {"shot_count": len(shots), "shot_starts_seconds": starts,
-                       "dialogue_segments": len(dialogues), "dialogue_characters": character_count}
+                       "dialogue_segments": len(dialogues), "dialogue_characters": character_count,
+                       "speaker_bindings": observed_speakers}
 
 
 def merge_dialogue(items):
@@ -393,7 +470,7 @@ def validate(args):
     errors, warnings, stats = report["errors"], report["warnings"], report["stats"]
     plan = load_plan(args.plan_json, errors) if args.plan_json else None
     if plan is None:
-        warnings.append("未提供plan-json：未按ordinary/urgent/action段落类别核验字数与状态变化数量，也未将逐镜可见Subject计划与retention出镜记录交叉核对")
+        warnings.append("未提供plan-json：未按段落类别核验容量与状态变化，未交叉核对逐镜可见Subject与完整说话人绑定；只能检查提示词自身已声明的绑定一致性")
     if not args.dialogue_json:
         warnings.append("未提供dialogue-json：未与原剧本逐字核验对白及说话者顺序")
     try:
@@ -445,7 +522,8 @@ def validate(args):
             item = plan.get(seq) if plan is not None else None
             dialogues, group = check_prompt(
                 cells[COLUMN_INDEX["提示词"]], refs, context, errors,
-                shot_plan=item.get("shots") if item is not None else None)
+                shot_plan=item.get("shots") if item is not None else None,
+                speaker_plan=item.get("speakers") if item is not None else None)
             all_dialogues.extend(dialogues)
             group.update({"sheet": name, "row": row_number, "seq": seq,
                           "reference_count": reference_count})
@@ -456,8 +534,15 @@ def validate(args):
                     mode = item["mode"]
                     low, high = RANGES[mode]
                     group["mode"] = mode
-                    if not low <= group["dialogue_characters"] <= high:
+                    count = group["dialogue_characters"]
+                    exception = item.get("capacity_exception")
+                    if count < low and valid_capacity_exception(exception):
+                        group["capacity_exception"] = exception
+                        warnings.append(f"{context}：申报短原稿且无法合理合组的容量例外，{count}字低于{low}字；仅豁免下限，原因与逐镜时间安排须人工复核")
+                    elif not low <= count <= high:
                         errors.append(f"{context}：{mode}须为{low}—{high}字，实际{group['dialogue_characters']}字")
+                    elif exception is not None:
+                        warnings.append(f"{context}：容量未低于下限，不需要capacity_exception，请清理无效申报")
             stats["groups"].append(group)
         duplicates = [seq for seq, count in Counter(sheet_sequences).items() if count > 1]
         if duplicates:
